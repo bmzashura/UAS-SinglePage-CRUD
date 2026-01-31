@@ -1,4 +1,0 @@
-{
-  "deprecated": true,
-  "note": "Admin data is now stored on MockAPI (/admin). This local file is no longer used by the server."
-}

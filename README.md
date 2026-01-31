@@ -2,17 +2,42 @@
 
 Prototype Single Page Application (SPA) menggunakan Vue 3 (CDN) + Tailwind CSS (Play CDN). Aplikasi ini adalah *mock* CRUD (data disimpan in-memory) untuk keperluan UI dan demonstrasi fitur.
 
-## Cara Menjalankan
 
-Cara cepat: buka `index.html` di browser (direkomendasikan menaruhnya pada server lokal). Contoh menjalankan server sederhana:
+## Cara Install & Menjalankan
 
-- Dengan Node (jika terpasang):
-  - Instal: `npm install -g serve`
-  - Jalankan: `serve .`
+### 1. Install Dependensi
 
-- Dengan Python 3:
-  - Jalankan: `python -m http.server 5173`
-  - Lalu buka: `http://localhost:5173`
+```bash
+npm install
+```
+
+### 2. Jalankan Mode Development (Frontend & Backend Sekaligus)
+
+```bash
+npm run dev:all
+```
+
+Script ini akan otomatis menjalankan backend (Express, port 3000) dan frontend (Vite, port 5173) secara paralel. Anda cukup membuka http://localhost:5173 di browser.
+
+### Alternatif Manual (Jika ingin terminal terpisah)
+
+Terminal 1:
+```bash
+npm run server
+```
+Terminal 2:
+```bash
+npm run dev
+```
+
+### Build & Preview (Opsional untuk produksi)
+
+```bash
+npm run build
+npm run preview
+```
+
+Untuk produksi, jalankan `npm start` (Express akan serve folder `dist`).
 
 ## Fitur yang telah disediakan
 
@@ -22,22 +47,61 @@ Cara cepat: buka `index.html` di browser (direkomendasikan menaruhnya pada serve
 
 **Endpoint:** `https://697b85bd0e6ff62c3c5c53d4.mockapi.io/Menu` (data dimuat saat aplikasi dibuka)
 
-## Struktur berkas (baru)
 
-Folder proyek kini diorganisir untuk workflow profesional:
+## Struktur Folder & File Penting
 
-- `index.html` — entry point (Vite)
-- `src/` — kode sumber frontend
-  - `src/main.js` — entry Vite
-  - `src/App.vue` — root SFC
-  - `src/components/` — Vue SFC components (`Navbar.vue`, `CardItem.vue`, `FormInput.vue`, `Login.vue`, `Footer.vue`)
-  - `src/services/` — service logic (auth, API helpers) (`auth.js`)
-  - `src/styles/` — Tailwind/CSS entry (`index.css`)
-- `server/` — server-side files (Express proxy, auth)
-  - `server/server.js` — Express server (auth, proxy)
-  - `server/sessions.json` — persisted sessions (ignored in VCS)
+```
+UAS-SinglePage-CRUD/
+├── index.html
+├── package.json
+├── vite.config.js
+├── tailwind.config.cjs
+├── postcss.config.cjs
+├── src/
+│   ├── App.vue                # Root Vue SFC
+│   ├── main.js                # Entry point Vite
+│   ├── styles/
+│   │   └── index.css          # Tailwind CSS entry
+│   ├── components/
+│   │   ├── Navbar.vue         # Header & branding
+│   │   ├── CardItem.vue       # Kartu menu makanan/minuman
+│   │   ├── FormInput.vue      # Form tambah/edit menu
+│   │   ├── Footer.vue         # Footer aplikasi
+│   │   └── Ornament.vue       # Ornamen SVG dekoratif
+│   └── services/
+│       └── imgbb.js           # Helper upload gambar ke ImgBB (via server proxy)
+├── server/
+│   ├── server.js              # Express server (proxy, upload, fallback)
+│   ├── menu-store.js          # Fallback penyimpanan menu lokal (JSON)
+│   └── data/
+│       └── menu.json          # Data menu lokal (fallback)
+├── image/
+│   └── logo.png               # Logo aplikasi
+└── README.md
+```
 
-Deprecated JS components moved to `archive/` for history.
+## Arsitektur Aplikasi
+
+- **Frontend:** Vue 3 (SFC), Vite, Tailwind CSS.
+  - Komponen utama: Navbar, CardItem, FormInput, Footer, Ornament.
+  - State dikelola dengan `reactive`/`ref` (tanpa Vuex).
+  - Upload gambar: file diubah ke base64, dikirim ke backend (`/upload`), backend mengunggah ke ImgBB, URL disimpan ke MockAPI.
+  - Fallback: Jika MockAPI gagal, data menu disimpan/diambil dari file lokal (`server/data/menu.json`).
+
+- **Backend:** Node.js + Express.
+  - Proxy endpoint `/api/*` ke MockAPI.
+  - Endpoint `/upload` untuk upload gambar ke ImgBB (menghindari expose API key di frontend).
+  - Fallback CRUD: Jika MockAPI down, operasi CRUD dilakukan ke file lokal.
+  - CORS diaktifkan untuk pengembangan.
+
+- **Build Tools:** Vite (dev server, build), Tailwind CSS (utility-first styling), Nodemon (dev server backend).
+
+---
+
+Tidak ada autentikasi, aplikasi bersifat publik.
+Semua perubahan menu langsung tersimpan ke MockAPI (atau fallback ke file lokal jika offline).
+Logo dan tema warna menyesuaikan branding Rumah Makan Padang (maroon/emas).
+Untuk upload gambar, gunakan file PNG/JPG, atau masukkan URL gambar langsung.
 
 Lanjutkan dengan menjalankan `npm install` lalu `npm run server` dan `npm run dev` (di terminal terpisah) untuk memulai server dan dev frontend.
 
@@ -69,12 +133,14 @@ Untuk produksi / preview build:
 - Preview (Vite): `npm run preview` (opsional)
 - Atau jalankan server Express untuk serve `dist`: `npm start` — server akan menyajikan folder `dist` jika ada.
 
-Catatan: file `server.js` di root adalah server Express yang melakukan proxy dari `/api/*` ke `https://697b85bd0e6ff62c3c5c53d4.mockapi.io/` dan juga menyediakan endpoint auth (`/auth/login`). Pastikan Anda memanggil endpoint menggunakan path yang dimulai dengan `/api/` (aplikasi sudah diatur demikian).
+Catatan: server entry adalah `server/server.js` (Express) — ia mem-proxy `/api/*` ke MockAPI. Aplikasi CRUD sekarang bersifat publik (tidak memerlukan login) sehingga Anda dapat membuat, memperbarui, dan menghapus menu secara langsung.
 
-Admin & Autentikasi
-- Default admin dibuat otomatis saat server dijalankan: **username**: `bemis`, **password**: `L1nux3r`.
-- Password disimpan dalam bentuk hashed (bcrypt) pada resource `/admin` di MockAPI.
-- Login dilakukan melalui endpoint `POST /auth/login` (body: `{ "username", "password" }`) — server akan memverifikasi password yang di-hash dengan MockAPI.
-- Setelah login berhasil server mengeluarkan token (selama 1 jam). Frontend menyimpan token dan mengirimkan header **`x-admin-username`** dan **`x-admin-token`** pada request POST/PUT/DELETE ke `/api/Menu`.
-- Session token sekarang dipersist ke file `sessions.json` pada server sehingga token dapat bertahan setelah restart server selama belum kedaluwarsa.
-- Ini meningkatkan keamanan dibanding memverifikasi password di frontend, tetapi masih untuk demo saja; gunakan solusi otentikasi yang lebih matang (HTTPS, token signing, refresh tokens) untuk produksi.
+Data Schema (required fields)
+- Setiap item `Menu` harus memenuhi skema berikut:
+  - `nama` (String) — nama menu
+  - `harga` (Number) — harga dalam Rupiah
+  - `kategori` (String) — kategori menu
+- `foto` (String) — URL ke foto (opsional, tapi disarankan); aplikasi menyediakan upload gambar ke ImgBB dan menyimpan URL hasil upload ke MockAPI.
+- `isReady` (Boolean) — status ketersediaan (true = tersedia)
+
+Catatan: MockAPI akan menyimpan fields seperti dikirim. Saat menambah/ubah item, Anda dapat memasukkan URL gambar langsung atau pilih file untuk diunggah — aplikasi akan mengunggah file ke ImgBB dan menggunakan URL yang dikembalikan.
