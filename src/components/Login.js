@@ -1,5 +1,5 @@
-import authModule from '../auth.js'
-
+// Deprecated: use `Login.vue` component
+export default {}
 export default {
   name: 'LoginModal',
   data() {

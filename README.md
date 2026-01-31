@@ -22,33 +22,59 @@ Cara cepat: buka `index.html` di browser (direkomendasikan menaruhnya pada serve
 
 **Endpoint:** `https://697b85bd0e6ff62c3c5c53d4.mockapi.io/Menu` (data dimuat saat aplikasi dibuka)
 
-## Struktur berkas
+## Struktur berkas (baru)
 
-- `index.html` — entry point
-- `src/main.js` — aplikasi utama + store sederhana
-- `src/components/` — komponen UI
+Folder proyek kini diorganisir untuk workflow profesional:
+
+- `index.html` — entry point (Vite)
+- `src/` — kode sumber frontend
+  - `src/main.js` — entry Vite
+  - `src/App.vue` — root SFC
+  - `src/components/` — Vue SFC components (`Navbar.vue`, `CardItem.vue`, `FormInput.vue`, `Login.vue`, `Footer.vue`)
+  - `src/services/` — service logic (auth, API helpers) (`auth.js`)
+  - `src/styles/` — Tailwind/CSS entry (`index.css`)
+- `server/` — server-side files (Express proxy, auth)
+  - `server/server.js` — Express server (auth, proxy)
+  - `server/sessions.json` — persisted sessions (ignored in VCS)
+
+Deprecated JS components moved to `archive/` for history.
+
+Lanjutkan dengan menjalankan `npm install` lalu `npm run server` dan `npm run dev` (di terminal terpisah) untuk memulai server dan dev frontend.
 
 ---
 
 Menjalankan dengan Node (Express) + proxy ke MockAPI ✅
 
-Untuk menjalankan aplikasi dengan server Node yang juga mem-proxy request API (untuk menghindari CORS dan memudahkan pengembangan):
+Untuk pengembangan (direkomendasikan):
 
 1. Install dependensi:
 
    npm install
 
-2. Jalankan server:
+2a. Jalankan server API/proxy (Express) di terminal pertama:
 
-   npm start
+   npm run server
 
-   Server akan berjalan di http://localhost:3000 dan mem-proxy semua request `GET/POST/PUT/DELETE` ke endpoint MockAPI asli.
+   Server akan berjalan di http://localhost:3000 dan mem-proxy semua request `/api/*` ke MockAPI.
 
-Catatan: file `server.js` di root adalah server Express sederhana yang melakukan proxy dari `/api/*` ke `https://697b85bd0e6ff62c3c5c53d4.mockapi.io/`. Pastikan Anda memanggil endpoint menggunakan path yang dimulai dengan `/api/` (aplikasi sudah diatur demikian).
+2b. Jalankan frontend dev server (Vite) di terminal kedua:
+
+   npm run dev
+
+   Vite dev server akan berjalan di http://localhost:5173 dan mem-proxy `/api` ke http://localhost:3000 (lihat `vite.config.js`).
+
+Untuk produksi / preview build:
+
+- Build: `npm run build` (membuat folder `dist`)
+- Preview (Vite): `npm run preview` (opsional)
+- Atau jalankan server Express untuk serve `dist`: `npm start` — server akan menyajikan folder `dist` jika ada.
+
+Catatan: file `server.js` di root adalah server Express yang melakukan proxy dari `/api/*` ke `https://697b85bd0e6ff62c3c5c53d4.mockapi.io/` dan juga menyediakan endpoint auth (`/auth/login`). Pastikan Anda memanggil endpoint menggunakan path yang dimulai dengan `/api/` (aplikasi sudah diatur demikian).
 
 Admin & Autentikasi
 - Default admin dibuat otomatis saat server dijalankan: **username**: `bemis`, **password**: `L1nux3r`.
-- Password disimpan dalam bentuk hashed (bcrypt) di file lokal `admins.json` pada server.
-- Login dilakukan melalui endpoint `POST /auth/login` (body: `{ "username", "password" }`) — server akan memverifikasi password yang di-hash.
+- Password disimpan dalam bentuk hashed (bcrypt) pada resource `/admin` di MockAPI.
+- Login dilakukan melalui endpoint `POST /auth/login` (body: `{ "username", "password" }`) — server akan memverifikasi password yang di-hash dengan MockAPI.
 - Setelah login berhasil server mengeluarkan token (selama 1 jam). Frontend menyimpan token dan mengirimkan header **`x-admin-username`** dan **`x-admin-token`** pada request POST/PUT/DELETE ke `/api/Menu`.
+- Session token sekarang dipersist ke file `sessions.json` pada server sehingga token dapat bertahan setelah restart server selama belum kedaluwarsa.
 - Ini meningkatkan keamanan dibanding memverifikasi password di frontend, tetapi masih untuk demo saja; gunakan solusi otentikasi yang lebih matang (HTTPS, token signing, refresh tokens) untuk produksi.

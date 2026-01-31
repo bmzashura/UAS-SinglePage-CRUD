@@ -1,12 +1,9 @@
-import authModule from '../auth.js'
+import authModule from '../services/auth.js'
 
 export default {
-  name: 'Navbar',
-  data() { return { auth: authModule.auth } },
-  methods: {
-    openLogin() { window.dispatchEvent(new Event('open-login')) },
-    logout() { authModule.logout(); window.dispatchEvent(new Event('auth-changed')) }
-  },
+  // Deprecated: use `Navbar.vue`
+  name: 'Navbar'
+}
   template: `
     <header class="bg-white shadow">
       <div class="container mx-auto px-4 py-4 flex items-center justify-between">
