@@ -196,7 +196,7 @@ Bagian ini menunjukkan alur penggunaan aplikasi melalui tangkapan layar (screens
 1. Klik tombol **Hapus** pada kartu menu yang ingin dihapus.
 
 <p align="center">
-  <img src="screenshot/3_1_hapus_menu.png" alt="Klik Hapus" width="600">di aplikasi i
+  <img src="screenshot/3_1_hapus_menu.png" alt="Klik Hapus" width="600">
 </p>
 
 2. Sebuah pop-up konfirmasi akan muncul. Periksa pesan konfirmasi.
