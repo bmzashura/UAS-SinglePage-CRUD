@@ -85,7 +85,7 @@ UAS-SinglePage-CRUD/
 - **Frontend:** Vue 3 (SFC), Vite, Tailwind CSS.
   - Komponen utama: Navbar, CardItem, FormInput, Footer, Ornament.
   - State dikelola dengan `reactive`/`ref` (tanpa Vuex).
-  - Upload gambar: file diubah ke base64, dikirim ke backend (`/upload`), backend mengunggah ke ImgBB, URL disimpan ke MockAPI.
+  - Upload gambar: file diubah ke base64, dikirim ke backend (`/upload`), backend mengunggah ke ImgBB (Dokumentasi: https://api.imgbb.com), URL disimpan ke MockAPI.
   - Fallback: Jika MockAPI gagal, data menu disimpan/diambil dari file lokal (`server/data/menu.json`).
 
 - **Backend:** Node.js + Express.
@@ -144,3 +144,49 @@ Data Schema (required fields)
 - `isReady` (Boolean) — status ketersediaan (true = tersedia)
 
 Catatan: MockAPI akan menyimpan fields seperti dikirim. Saat menambah/ubah item, Anda dapat memasukkan URL gambar langsung atau pilih file untuk diunggah — aplikasi akan mengunggah file ke ImgBB dan menggunakan URL yang dikembalikan.
+
+## Usability Test (Screenshot)
+
+### 1. Tampilan Awal
+![Tampilan Awal](screenshot/0_tempilan_awal.png)
+
+### 2. Menambah Menu
+**Form Tambah Menu:**
+![Menambah Menu](screenshot/1_1_Menambahkan_Menu.png)
+
+**Berhasil Menambah Menu:**
+![Menu Berhasil Ditambahkan](screenshot/1_2_Menambahkan_Menu_sukses.png)
+
+### 3. Mengedit Menu (Inline Edit)
+**Memulai Edit:**
+![Start Inline Edit](screenshot/2_1_start_inline_edit.png)
+
+**Proses Edit:**
+![Inline Edit](screenshot/2_2_inline_edit.png)
+
+**Berhasil Edit:**
+![Edit Sukses](screenshot/2_3_inline_edit_sukses.png)
+
+### 4. Menghapus Menu
+**Klik Hapus:**
+![Hapus Menu](screenshot/3_1_hapus_menu.png)
+
+**Konfirmasi Hapus:**
+![Konfirmasi Hapus](screenshot/3_2_komfirmasi_hapus_menu.png)
+
+**Berhasil Hapus:**
+![Hapus Sukses](screenshot/3_3_hapus_menu_sukses.png)
+
+## Refleksi Diri
+
+### Tantangan Terbesar: Pergeseran Pola Pikir ke "Component-Based" dan "Reactivity"
+
+Tantangan terbesar yang saya hadapi saat beralih dari HTML/JS standar ke framework modern (Vue.js) adalah mengubah cara berpikir dari **Imperatif** (memanipulasi DOM secara langsung, misal: `document.getElementById('app').innerHTML = ...`) menjadi **Deklaratif** (mendefinisikan *state* dan membiarkan framework memperbarui tampilan).
+
+### Bagaimana Saya Menyelesaikannya:
+
+1.  **Memecah UI Menjadi Komponen Kecil:** Awalnya saya bingung bagaimana membagi struktur kode. Saya mengatasinya dengan mulai mengisolasi bagian yang berulang seperti `CardItem` dan `Navbar`. Hal ini membuat kode jauh lebih bersih, terorganisir, dan mudah dikelola (maintainable) dibandingkan satu file HTML raksasa.
+2.  **Memahami Reactivity (ref/reactive):** Konsep sinkronisasi otomatis antara data (JavaScript) dan tampilan (HTML) sempat membingungkan. Saya belajar untuk mempercayai sistem reaktif Vue—menggunakan `v-model` dan binding data—sehingga saya tidak perlu lagi menulis kode manual untuk memperbarui DOM setiap kali data berubah.
+3.  **Manajemen State & Build Tools:** Beradaptasi dengan `npm` dan `Vite` sebagai build tools juga merupakan hal baru. Namun, fitur seperti *Hot Module Replacement* (HMR) sangat mempercepat proses development dibandingkan harus me-refresh browser secara manual setiap kali ada perubahan kecil.
+
+Tugas UAS ini mengajarkan bahwa meskipun konfigurasi awal framework modern terasa lebih kompleks, hasil akhirnya adalah aplikasi yang jauh lebih *robust*, mudah dikembangkan, dan memberikan pengalaman pengguna (UX) yang lebih halus (SPA).

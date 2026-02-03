@@ -21,7 +21,7 @@
       <!-- Form section (distinct background / divider) -->
       <div class="mb-6">
         <div class="bg-gray-50 border border-gray-200 rounded p-4">
-          <FormInput :item="formItem" @submit="createItemOrUpdate" />
+          <FormInput ref="formInputRef" :item="formItem" @submit="createItemOrUpdate" />
         </div>
       </div>
 
@@ -49,13 +49,13 @@
 
     </main>
 
-    <!-- Flash / Alert (near form) -->
-    <div class="container mx-auto px-4">
-      <div v-if="flash.show" :class="flash.type === 'success' ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-red-50 border-red-200 text-red-800'" class="p-3 rounded border mt-3 flex items-center justify-between">
-        <div>{{ flash.message }}</div>
-        <button class="ml-4 px-2 py-1 text-sm border border-amber-300 rounded text-amber-700" @click="flash.show = false">Tutup</button>
-      </div>
-    </div>
+    <!-- Toast Notification (Replaces old Flash) -->
+    <ToastNotification 
+      :show="flash.show" 
+      :type="flash.type" 
+      :message="flash.message" 
+      @close="flash.show = false" 
+    />
 
     <!-- Confirm delete dialog -->
     <div v-if="confirm.show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -79,11 +79,13 @@ import Navbar from './components/Navbar.vue'
 import CardItem from './components/CardItem.vue'
 import FormInput from './components/FormInput.vue'
 import FooterCmp from './components/Footer.vue'
+import ToastNotification from './components/ToastNotification.vue'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:3000/api/Menu' : '/api/Menu'
 const store = reactive({ items: [], loading: false, error: null, lastError: null })
 
 const formItem = ref(null)
+const formInputRef = ref(null)
 const flash = reactive({ show: false, message: '', type: 'success' })
 const confirm = reactive({ show: false, id: null, message: '' })
 
@@ -164,7 +166,10 @@ async function createItemOrUpdate(payload) {
     // auto-hide flash
     setTimeout(() => { flash.show = false }, 4000)
     // clear form after successful create
-    if (!payload.id) formItem.value = null
+    if (!payload.id) {
+      formItem.value = null
+      if (formInputRef.value) formInputRef.value.reset()
+    }
   } catch (err) {
     flash.show = true; flash.type = 'error'; flash.message = 'Terjadi error: ' + (err.message || err)
   }

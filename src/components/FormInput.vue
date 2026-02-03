@@ -99,6 +99,8 @@ function reset() {
   if (previewUrl.value) { URL.revokeObjectURL(previewUrl.value); previewUrl.value = '' }
 }
 
+defineExpose({ reset })
+
 async function submitForm() {
   if (!form.nama || !form.harga) return alert('Nama dan Harga wajib diisi')
   try {
