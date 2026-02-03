@@ -147,35 +147,70 @@ Catatan: MockAPI akan menyimpan fields seperti dikirim. Saat menambah/ubah item,
 
 ## Usability Test (Screenshot)
 
-### 1. Tampilan Awal
-![Tampilan Awal](screenshot/0_tempilan_awal.png)
+Bagian ini menunjukkan alur penggunaan aplikasi melalui tangkapan layar (screenshot) untuk menguji fungsionalitas CRUD dan tampilan antarmuka.
+
+### 1. Tampilan Awal Aplikasi
+
+1. Buka aplikasi di browser Anda (misalnya, `http://localhost:5173` setelah menjalankan `npm run dev:all`). Anda akan melihat daftar menu yang sudah ada (jika ada) dan form untuk menambahkan menu baru.
+
+<p align="center">
+  <img src="screenshot/0_tempilan_awal.png" alt="Tampilan Awal" width="600">
+</p>
 
 ### 2. Menambah Menu
-**Form Tambah Menu:**
-![Menambah Menu](screenshot/1_1_Menambahkan_Menu.png)
 
-**Berhasil Menambah Menu:**
-![Menu Berhasil Ditambahkan](screenshot/1_2_Menambahkan_Menu_sukses.png)
+1. Pada form "Tambah Menu", isi kolom **Nama**, pilih **Kategori**, isi **Harga**, dan unggah **Foto** (opsional).
+
+<p align="center">
+  <img src="screenshot/1_1_Menambahkan_Menu.png" alt="Form Tambah Menu" width="600">
+</p>
+
+2. Klik tombol **Tambah**. Menu baru akan ditambahkan ke daftar dan notifikasi "Sukses" akan muncul di pojok kanan atas. Form input akan otomatis bersih.
+
+<p align="center">
+  <img src="screenshot/1_2_Menambahkan_Menu_sukses.png" alt="Menu Berhasil Ditambahkan" width="600">
+</p>
 
 ### 3. Mengedit Menu (Inline Edit)
-**Memulai Edit:**
-![Start Inline Edit](screenshot/2_1_start_inline_edit.png)
 
-**Proses Edit:**
-![Inline Edit](screenshot/2_2_inline_edit.png)
+1. Klik tombol **Edit** pada salah satu kartu menu yang ingin diubah.
 
-**Berhasil Edit:**
-![Edit Sukses](screenshot/2_3_inline_edit_sukses.png)
+<p align="center">
+  <img src="screenshot/2_1_start_inline_edit.png" alt="Mulai Edit" width="600">
+</p>
+
+2. Form input di bagian atas akan terisi dengan data menu tersebut. Lakukan perubahan yang diinginkan (misalnya, ubah harga atau nama menu).
+
+<p align="center">
+  <img src="screenshot/2_2_inline_edit.png" alt="Proses Edit" width="600">
+</p>
+
+3. Klik tombol **Simpan Perubahan**. Perubahan pada menu akan tersimpan dan notifikasi "Sukses" akan muncul.
+
+<p align="center">
+  <img src="screenshot/2_3_inline_edit_sukses.png" alt="Edit Sukses" width="600">
+</p>
 
 ### 4. Menghapus Menu
-**Klik Hapus:**
-![Hapus Menu](screenshot/3_1_hapus_menu.png)
 
-**Konfirmasi Hapus:**
-![Konfirmasi Hapus](screenshot/3_2_komfirmasi_hapus_menu.png)
+1. Klik tombol **Hapus** pada kartu menu yang ingin dihapus.
 
-**Berhasil Hapus:**
-![Hapus Sukses](screenshot/3_3_hapus_menu_sukses.png)
+<p align="center">
+  <img src="screenshot/3_1_hapus_menu.png" alt="Klik Hapus" width="600">di aplikasi i
+</p>
+
+2. Sebuah pop-up konfirmasi akan muncul. Periksa pesan konfirmasi.
+
+<p align="center">
+  <img src="screenshot/3_2_komfirmasi_hapus_menu.png" alt="Konfirmasi Hapus" width="600">
+</p>
+
+3. Klik tombol **Hapus** pada pop-up untuk melanjutkan. Menu akan dihapus dari daftar dan notifikasi "Sukses" akan muncul.
+
+<p align="center">
+  <img src="screenshot/3_3_hapus_menu_sukses.png" alt="Berhasil Hapus" width="600">
+</p>
+
 
 ## Refleksi Diri
 
